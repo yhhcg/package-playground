@@ -1,10 +1,10 @@
 /* eslint-disable require-jsdoc */
 import {all} from 'redux-saga/effects';
 
-import list from './List/saga';
+import table from './Table/saga';
 
 export default function* rootSaga() {
   yield all([
-    list(),
+    table(),
   ]);
 }
