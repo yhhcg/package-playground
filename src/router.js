@@ -20,37 +20,11 @@ class Router extends React.Component {
 
   constructor(props, context) {
     super(props);
-
-    this.ListPage = lodable({
-      loader: () => {
-        injectAsyncReducer( // Aynchronously load reducer
-          context.store,
-          'list', // Reducer name
-          require('./List/reducer').default // Reducer function
-        );
-
-        return import('./List/container');
-      },
-      loading: () => {
-        return <div>Loading...</div>;
-      },
-    });
-
-    this.DetailPage = lodable({
-      loader: () => {
-        return import('./Detail');
-      },
-      loading: () => {
-        return <div>Loading...</div>;
-      },
-    });
   }
 
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={this.ListPage} />
-        <Route exact path="/detail" component={this.DetailPage} />
       </Switch>
     );
   }

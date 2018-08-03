@@ -2,26 +2,17 @@
 import {connect} from 'react-redux';
 
 import Component from './component';
-import {
-  async,
-} from './actions';
 
-const {
-  fetchSomeAsyncRequest,
-} = async;
+const {} = async;
+
+const {} = sync;
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    count: state.list.count,
-  };
+  return {};
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    fetchSomeAsyncRequest: () => {
-      dispatch(fetchSomeAsyncRequest());
-    },
-  };
+  return {};
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
