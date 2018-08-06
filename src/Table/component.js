@@ -2,6 +2,8 @@ import React from 'react';
 import {
   array,
   func,
+  object,
+  string,
 } from 'prop-types';
 import {
   Table as MuiTable,
@@ -14,6 +16,63 @@ import {
 import {hot} from 'react-hot-loader';
 
 /**
+ * MyTableHeadCell
+ */
+class MyTableHeadCell extends React.PureComponent {
+  static propTypes = {
+    title: string.isRequired,
+  };
+
+  /**
+   * Render
+   * @return {Element}
+   */
+  render() {
+    const {
+      title,
+    } = this.props;
+
+    return (
+      <TableCell>{title}</TableCell>
+    );
+  }
+}
+
+/**
+ * MyTableCell
+ */
+class MyTableCell extends React.Component {
+  static propTypes = {
+    children: object,
+    value: string.isRequired,
+  };
+
+  /**
+   * shouldComponentUpdate
+   * @param  {Object} nextProps
+   * @return {boolean}
+   */
+  shouldComponentUpdate(nextProps) {
+    if (this.props.value === nextProps.value) return false;
+    return true;
+  }
+
+  /**
+   * Render
+   * @return {Element}
+   */
+  render() {
+    const {
+      children,
+    } = this.props;
+
+    return (
+      <TableCell>{children}</TableCell>
+    );
+  }
+}
+
+/**
  * Table
  */
 @hot(module)
@@ -23,14 +82,6 @@ class Table extends React.Component {
     data: array.isRequired,
     onChange: func.isRequired,
   };
-
-  /**
-   * @param {Object} props
-   */
-  constructor(props) {
-    super(props);
-    this.props = props;
-  }
 
   /**
    * @param  {string} columnKey
@@ -62,11 +113,9 @@ class Table extends React.Component {
       <MuiTable>
         <TableHead>
           <TableRow>
-            {
-              columns.map((column) => {
-                return (<TableCell key={column.dataIndex}>{column.title}</TableCell>);
-              })
-            }
+            {columns.map((column) => (
+              <MyTableHeadCell key={column.dataIndex} title={column.title} />
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -77,12 +126,12 @@ class Table extends React.Component {
                   {
                     columns.map((column) => {
                       return (
-                        <TableCell key={`${row.key}-${column.dataIndex}`}>
+                        <MyTableCell key={`${row.key}-${column.dataIndex}`} value={row[`${column.dataIndex}`]}>
                           <TextField
                             onChange={(event) => this.handleChange(column.dataIndex, index, event)}
                             value={row[`${column.dataIndex}`]}
                           />
-                        </TableCell>
+                        </MyTableCell>
                       );
                     })
                   }
