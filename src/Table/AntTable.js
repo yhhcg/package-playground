@@ -10,7 +10,7 @@ import {
   TextField,
 } from '@material-ui/core';
 /**
- * AntTable
+ * Compare the table performance of antd and material-ui
  */
 class AntTable extends Component {
   static propTypes = {
