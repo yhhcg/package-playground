@@ -2,7 +2,7 @@
 import {connect} from 'react-redux';
 
 import {sync} from './actions';
-import Component from './component';
+import Component from './AntTable';
 
 const {
   changeData,
