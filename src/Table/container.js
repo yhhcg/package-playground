@@ -1,8 +1,9 @@
 /* eslint-disable require-jsdoc */
 import {connect} from 'react-redux';
+import {change} from 'redux-form';
 
 import {sync} from './actions';
-import Component from './AntTable';
+import Component from './ReduxFormAnt';
 
 const {
   changeData,
@@ -48,7 +49,12 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
     onChange: (payload) => {
-      dispatch(changeData(payload));
+      const {
+        fieldName,
+        value,
+      } = payload;
+      // dispatch(changeData(payload));
+      dispatch(change('ReduxFormAnt', fieldName, value));
     },
   };
 };
