@@ -13,6 +13,9 @@ import {
   TableRow,
   TextField,
 } from '@material-ui/core';
+import {
+  Input,
+} from 'antd';
 import {hot} from 'react-hot-loader';
 
 /**
@@ -127,7 +130,7 @@ class Table extends React.Component {
                     columns.map((column) => {
                       return (
                         <MyTableCell key={`${row.key}-${column.dataIndex}`} value={row[`${column.dataIndex}`]}>
-                          <TextField
+                          <Input
                             onChange={(event) => this.handleChange(column.dataIndex, index, event)}
                             value={row[`${column.dataIndex}`]}
                           />
