@@ -6,6 +6,7 @@
  */
 import {combineReducers} from 'redux';
 import {routerReducer as router} from 'react-router-redux';
+import { reducer as reduxFormReducer } from 'redux-form';
 
 /**
  * App reducer maintain states to be shared across modules
@@ -33,6 +34,7 @@ export default function createReducer(asyncReducers) {
     // Permanent redux reducers
     router,
     app,
+    form: reduxFormReducer,
     // Aync reducers
     ...asyncReducers,
   });
