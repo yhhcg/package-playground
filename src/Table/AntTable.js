@@ -5,10 +5,11 @@ import {
 } from 'prop-types';
 import {
   Table,
+  Input,
 } from 'antd';
-import {
-  TextField,
-} from '@material-ui/core';
+// import {
+//   TextField,
+// } from '@material-ui/core';
 /**
  * Compare the table performance of antd and material-ui
  */
@@ -29,10 +30,16 @@ class AntTable extends Component {
       onChange,
     } = this.props;
 
+    console.time('cs');
+    
     onChange({
       columnKey,
       rowIndex,
       value: event.target.value,
+    });
+    // cs: 435.06689453125ms
+    setTimeout(() => {
+      console.timeEnd('cs');
     });
   }
 
@@ -49,7 +56,7 @@ class AntTable extends Component {
       return columns.map((column) => {
         return {
           [column.dataIndex]: (
-            <TextField
+            <Input
               onChange={(event) => this.handleChange(column.dataIndex, index, event)}
               value={row[`${column.dataIndex}`]}
             />
