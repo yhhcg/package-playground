@@ -10,6 +10,7 @@ import {
 } from 'antd';
 import {
   Field,
+  FieldArray,
   reduxForm,
 } from 'redux-form';
 
@@ -37,10 +38,16 @@ const AInput = makeField(Input);
  */
 class ReduxFormAnt extends Component {
   static propTypes = {
-    columns: array.isRequired,
+
     data: array.isRequired,
     onChange: func,
   };
+
+  componentDidMount() {
+    this.props.initial({
+      scheduleList: this.props.data,
+    });
+  }
 
   /**
    * @param  {string} columnKey
@@ -72,37 +79,81 @@ class ReduxFormAnt extends Component {
    */
   render() {
     const {
-      columns,
       data,
     } = this.props;
 
-    const dataSource = data.map((row, index) => {
-      return columns.map((column, columnIndex) => {
-        return {
-          [column.dataIndex]: (
-            <Field
-              name={`${index}-${columnIndex}`}
-              component={AInput}
-              onChange={(event) => this.handleChange(column.dataIndex, index, `${index}-${columnIndex}`, event)}
-              value={row[`${column.dataIndex}`]}
-            />
-          ),
-        };
-      })
-      .reduce((accumulator, current) => {
-        return {
-          ...accumulator,
-          ...current,
-        };
-      }, {key: index});
-    });
+    const columns = [{
+      dataIndex: 'busShift',
+      title: '班次',
+    }, {
+      dataIndex: 'firstLeaveAt',
+      title: 'A站',
+    }, {
+      dataIndex: 'outBoundDrivingDuration',
+      title: '单程',
+    }, {
+      dataIndex: 'outBoundStayDuration',
+      title: '停站',
+    }, {
+      dataIndex: 'outBoundRemark',
+      title: '备注',
+    }, {
+      dataIndex: 'lastLeaveAt',
+      title: 'B站',
+    }, {
+      dataIndex: 'inBoundDrivingDuration',
+      title: '单程',
+    }, {
+      dataIndex: 'inBoundStayDuration',
+      title: '停站',
+    }, {
+      dataIndex: 'inBoundRemark',
+      title: '备注',
+    }, {
+      dataIndex: 'actions',
+      title: '操作',
+    }];
 
-    return (
-      <Form>
+    const TableField = (props) => {
+      const {
+        fields,
+      } = props;
+
+      const dataSource = fields.map((field, index) => {
+        return columns.map((column, columnIndex) => {
+          return {
+            [column.dataIndex]: (
+              <Field
+                name={`${field}.${column.dataIndex}`}
+                component={AInput}
+                // onChange={(event) => this.handleChange(column.dataIndex, index, `${index}-${columnIndex}`, event)}
+                value={data[index][`${column.dataIndex}`]}
+              />
+            ),
+          };
+        })
+        .reduce((accumulator, current) => {
+          return {
+            ...accumulator,
+            ...current,
+          };
+        }, {key: index});
+      });
+
+      return (
         <Table
           columns={columns}
           dataSource={dataSource}
           pagination={false}
+        />
+      );
+    };
+
+    return (
+      <Form>
+        <FieldArray
+          component={TableField}
+          name="scheduleList"
         />
       </Form>
     );
@@ -110,5 +161,6 @@ class ReduxFormAnt extends Component {
 }
 
 export default reduxForm({
+  enableReinitialize: true,
   form: 'ReduxFormAnt',
 })(ReduxFormAnt);
