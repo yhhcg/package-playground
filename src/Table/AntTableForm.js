@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import React, { Component } from 'react';
 import {
   array,
@@ -11,61 +12,164 @@ import {
 const {
   Item: FormItem,
 } = Form;
+const columns = [{
+  dataIndex: 'busShift',
+  title: '班次',
+}, {
+  dataIndex: 'firstLeaveAt',
+  title: 'A站',
+}, {
+  dataIndex: 'outBoundDrivingDuration',
+  title: '单程',
+}, {
+  dataIndex: 'outBoundStayDuration',
+  title: '停站',
+}, {
+  dataIndex: 'outBoundRemark',
+  title: '备注',
+}, {
+  dataIndex: 'lastLeaveAt',
+  title: 'B站',
+}, {
+  dataIndex: 'inBoundDrivingDuration',
+  title: '单程',
+}, {
+  dataIndex: 'inBoundStayDuration',
+  title: '停站',
+}, {
+  dataIndex: 'inBoundRemark',
+  title: '备注',
+}, {
+  dataIndex: 'actions',
+  title: '操作',
+}];
 
-/**
- * AntTableForm
- */
-class AntTableForm extends Component {
-  static propTypes = {
-    columns: array.isRequired,
-    data: array.isRequired,
-    onChange: func,
-  };
+class AntTableForm1 extends Component {
+  render() {
+    const {
+      children,
+      form,
+      ...others,
+    } = this.props;
 
-  /**
-   * @param  {string} columnKey
-   * @param  {number} rowIndex
-   * @param  {Object} event
-   */
+    return React.cloneElement(children, {
+      form1: form,
+      ...others,
+    });
+  }
+}
+
+const Form1 = Form.create({
+  mapPropsToFields(props) {
+    const fields = {};
+    const {
+      data,
+    } = props;
+
+    data.forEach((row, index) => {
+      if (index % 2 === 0) {
+        columns.forEach((column) => {
+          fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
+            value: row[column.dataIndex],
+          });
+        });
+      }
+    });
+
+    console.log(fields)
+
+    return {
+      ...fields,
+    };
+  },
+})(AntTableForm1);
+
+
+class AntTableForm2 extends Component {
+  render() {
+    const {
+      children,
+      form,
+      ...others,
+    } = this.props;
+
+    return React.cloneElement(children, {
+      form2: form,
+      ...others,
+    });
+  }
+}
+
+const Form2 = Form.create({
+  mapPropsToFields(props) {
+    const fields = {};
+    const {
+      data,
+    } = props;
+
+    data.forEach((row, index) => {
+      if (index % 2 === 1) {
+        columns.forEach((column) => {
+          fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
+            value: row[column.dataIndex],
+          });
+        });
+      }
+    });
+    console.log(fields)
+
+    return {
+      ...fields,
+    };
+  },
+})(AntTableForm2);
+
+class MergeForm extends Component {
+  render() {
+    return (
+      <Form1 {...this.props}>
+        <Form2>
+          <FormDemo />
+        </Form2>
+      </Form1>
+    );
+  }
+}
+
+class FormDemo extends Component {
   handleChange = (columnKey, rowIndex, event) => {
     const {
       onChange,
     } = this.props;
 
-    console.time('cs');
+    const value = event.target.value;
     
-    onChange({
-      columnKey,
-      rowIndex,
-      value: event.target.value,
-    });
-    // cs: 1845.031982421875ms
     setTimeout(() => {
-      console.timeEnd('cs');
-    });
+      onChange({
+        columnKey,
+        rowIndex,
+        value,
+      });
+    }, 50);
   }
 
-  /**
-   * @return {Element}
-   */
   render() {
     const {
-      columns,
       data,
-      form,
+      form1,
+      form2,
     } = this.props;
 
-    const {
-      getFieldDecorator,
-    } = form;
+    console.log(this.props);
 
     const dataSource = data.map((row, index) => {
+      let form = index === 0 ? form1 : form2;
       return columns.map((column) => {
         return {
           [column.dataIndex]: (
               <FormItem>
               {
-                getFieldDecorator(`data[${index}].${column.dataIndex}`, {
+                form.getFieldDecorator(`data[${index}].${column.dataIndex}`, {
                   rules: [{
                     required: true,
                     message: '必填',
@@ -101,24 +205,4 @@ class AntTableForm extends Component {
   }
 }
 
-export default Form.create({
-  mapPropsToFields(props) {
-    const fields = {};
-    const {
-      columns,
-      data,
-    } = props;
-
-    data.forEach((row, index) => {
-      columns.forEach((column) => {
-        fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
-          value: row[column.dataIndex],
-        });
-      });
-    });
-
-    return {
-      ...fields,
-    };
-  },
-})(AntTableForm);
+export default MergeForm;
