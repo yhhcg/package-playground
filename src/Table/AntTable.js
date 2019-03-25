@@ -15,7 +15,6 @@ import {
  */
 class AntTable extends Component {
   static propTypes = {
-    columns: array.isRequired,
     data: array.isRequired,
     onChange: func,
   };
@@ -48,9 +47,40 @@ class AntTable extends Component {
    */
   render() {
     const {
-      columns,
       data,
     } = this.props;
+
+    const columns = [{
+      dataIndex: 'busShift',
+      title: '班次',
+    }, {
+      dataIndex: 'firstLeaveAt',
+      title: 'A站',
+    }, {
+      dataIndex: 'outBoundDrivingDuration',
+      title: '单程',
+    }, {
+      dataIndex: 'outBoundStayDuration',
+      title: '停站',
+    }, {
+      dataIndex: 'outBoundRemark',
+      title: '备注',
+    }, {
+      dataIndex: 'lastLeaveAt',
+      title: 'B站',
+    }, {
+      dataIndex: 'inBoundDrivingDuration',
+      title: '单程',
+    }, {
+      dataIndex: 'inBoundStayDuration',
+      title: '停站',
+    }, {
+      dataIndex: 'inBoundRemark',
+      title: '备注',
+    }, {
+      dataIndex: 'actions',
+      title: '操作',
+    }];
 
     const dataSource = data.map((row, index) => {
       return columns.map((column) => {
