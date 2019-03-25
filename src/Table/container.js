@@ -6,7 +6,7 @@ import {
 } from 'redux-form';
 
 import {sync} from './actions';
-import Component from './ReduxFormAnt';
+import Component from './AntTableForm';
 
 const {
   changeData,
