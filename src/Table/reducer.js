@@ -11,6 +11,7 @@ const initialState = {
       key: index,
     };
   }),
+  changedRowKey: '',
 };
 
 function changeData(state, action) {
@@ -20,14 +21,19 @@ function changeData(state, action) {
     value,
   } = action.payload;
 
-  return [
-    ...state.slice(0, rowIndex),
-    {
-      ...state[rowIndex],
-      [columnKey]: value,
-    },
-    ...state.slice(rowIndex + 1),
-  ];
+  const rowKey = state[rowIndex].key;
+
+  return {
+    changedRowKey: rowKey,
+    data: [
+      ...state.slice(0, rowIndex),
+      {
+        ...state[rowIndex],
+        [columnKey]: value,
+      },
+      ...state.slice(rowIndex + 1),
+    ],
+  };
 }
 
 export default function Reducer(state=initialState, action) {
@@ -35,7 +41,7 @@ export default function Reducer(state=initialState, action) {
     case CHANGE_DATA:
       return {
         ...state,
-        data: changeData(state.data, action),
+        ...changeData(state.data, action),
       };
     default:
       return state;

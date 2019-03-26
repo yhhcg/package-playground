@@ -1,9 +1,10 @@
 /* eslint-disable require-jsdoc */
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import {
   array,
   func,
 } from 'prop-types';
+import { hot } from 'react-hot-loader';
 import {
   Form,
   Table,
@@ -44,7 +45,12 @@ const columns = [{
   title: '操作',
 }];
 
-class AntTableForm1 extends Component {
+let globalChangedRowKey = '';
+
+/**
+ * Create form and inject form prop to children.
+ */
+class AntTableForm extends Component {
   render() {
     const {
       children,
@@ -53,7 +59,7 @@ class AntTableForm1 extends Component {
     } = this.props;
 
     return React.cloneElement(children, {
-      form1: form,
+      form,
       ...others,
     });
   }
@@ -67,140 +73,143 @@ const Form1 = Form.create({
     } = props;
 
     data.forEach((row, index) => {
-      if (index % 2 === 0) {
-        columns.forEach((column) => {
-          fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
-            value: row[column.dataIndex],
-          });
+      columns.forEach((column) => {
+        fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
+          value: row[column.dataIndex],
         });
-      }
+      });
     });
-
-    console.log(fields)
 
     return {
       ...fields,
     };
   },
-})(AntTableForm1);
+})(AntTableForm);
 
+/**
+ * Optimize row.
+ */
+class OptimizedRow extends React.Component {
+  shouldComponentUpdate(nextProps) {
+    const rowKey = nextProps['data-row-key'];
+    if (globalChangedRowKey === '' || globalChangedRowKey === rowKey) {
+      return true;
+    }
+    return false;
+  }
 
-class AntTableForm2 extends Component {
   render() {
-    const {
-      children,
-      form,
-      ...others,
-    } = this.props;
-
-    return React.cloneElement(children, {
-      form2: form,
-      ...others,
-    });
+    return (
+      <tr {...this.props } flag="ibus" />
+    )
   }
 }
 
-const Form2 = Form.create({
-  mapPropsToFields(props) {
-    const fields = {};
-    const {
-      data,
-    } = props;
+/**
+ * Optimize table cell.
+ */
+class TableCell extends Component {
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.value === this.props.value) {
+      return false;
+    }
+    return true;
+  }
 
-    data.forEach((row, index) => {
-      if (index % 2 === 1) {
-        columns.forEach((column) => {
-          fields[`data[${index}].${column.dataIndex}`] = Form.createFormField({
-            value: row[column.dataIndex],
-          });
-        });
-      }
-    });
-    console.log(fields)
-
-    return {
-      ...fields,
-    };
-  },
-})(AntTableForm2);
-
-class MergeForm extends Component {
   render() {
+    const { column, form, index, onChange } = this.props;
     return (
-      <Form1 {...this.props}>
-        <Form2>
-          <FormDemo />
-        </Form2>
-      </Form1>
+      <FormItem>
+        {
+          form.getFieldDecorator(`data[${index}].${column.dataIndex}`, {
+            rules: [{
+              required: true,
+              message: '必填',
+            }],
+          })(
+            <Input
+              onChange={onChange}
+            />
+          )
+        }
+      </FormItem>
     );
   }
 }
 
+@hot(module)
 class FormDemo extends Component {
-  handleChange = (columnKey, rowIndex, event) => {
+  handleChange = (columnKey, rowIndex) => (event) => {
     const {
       onChange,
     } = this.props;
 
     const value = event.target.value;
-    
-    setTimeout(() => {
-      onChange({
-        columnKey,
-        rowIndex,
-        value,
-      });
-    }, 50);
+
+    onChange({
+      columnKey,
+      rowIndex,
+      value,
+    });
   }
 
   render() {
     const {
+      changedRowKey,
       data,
-      form1,
-      form2,
+      form,
     } = this.props;
 
-    console.log(this.props);
+    globalChangedRowKey = changedRowKey;
 
     const dataSource = data.map((row, index) => {
-      let form = index === 0 ? form1 : form2;
-      return columns.map((column) => {
+      const columnElements = columns.map((column) => {
         return {
           [column.dataIndex]: (
-              <FormItem>
-              {
-                form.getFieldDecorator(`data[${index}].${column.dataIndex}`, {
-                  rules: [{
-                    required: true,
-                    message: '必填',
-                  }],
-                })(
-                  <Input
-                    onChange={(event) => this.handleChange(column.dataIndex, index, event)}
-                    // value={row[`${column.dataIndex}`]}
-                  />
-                )
-              }
-            </FormItem>
+            <TableCell
+              column={column}
+              form={form}
+              index={index}
+              onChange={this.handleChange(column.dataIndex, index)}
+              value={row[column.dataIndex]}
+            />
           ),
         };
-      })
-      .reduce((accumulator, current) => {
+      }).reduce((accumulator, columnElement) => {
         return {
           ...accumulator,
-          ...current,
+          ...columnElement,
         };
-      }, {key: index});
+      }, {});
+
+      return {
+        key: row.key,
+        ...columnElements,
+      };
     });
 
     return (
       <div>
         <Table
           columns={columns}
+          components={{ body: { row: OptimizedRow }}}
           dataSource={dataSource}
           pagination={false}
         />
       </div>
+    );
+  }
+}
+
+/**
+ * Export page component.
+ */
+class MergeForm extends Component {
+  render() {
+    return (
+      <Form1 {...this.props}>
+        <FormDemo />
+      </Form1>
     );
   }
 }
