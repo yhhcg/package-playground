@@ -11,7 +11,7 @@ const initialState = {
       key: index,
     };
   }),
-  changedRowKey: '',
+  preData: [],
 };
 
 function changeData(state, action) {
@@ -21,10 +21,7 @@ function changeData(state, action) {
     value,
   } = action.payload;
 
-  const rowKey = state[rowIndex].key;
-
   return {
-    changedRowKey: rowKey,
     data: [
       ...state.slice(0, rowIndex),
       {
@@ -33,6 +30,7 @@ function changeData(state, action) {
       },
       ...state.slice(rowIndex + 1),
     ],
+    preData: state,
   };
 }
 

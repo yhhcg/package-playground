@@ -45,8 +45,6 @@ const columns = [{
   title: '操作',
 }];
 
-let globalChangedRowKey = '';
-
 /**
  * Create form and inject form prop to children.
  */
@@ -91,16 +89,15 @@ const Form1 = Form.create({
  */
 class OptimizedRow extends React.Component {
   shouldComponentUpdate(nextProps) {
-    const rowKey = nextProps['data-row-key'];
-    if (globalChangedRowKey === '' || globalChangedRowKey === rowKey) {
-      return true;
-    }
-    return false;
+    console.log(nextProps.shouldUpdate)
+    return nextProps.shouldUpdate;
   }
 
   render() {
+    console.log(this.props);
+    const { shouldUpdate, ...others } = this.props;
     return (
-      <tr {...this.props } flag="optimizedRow" />
+      <tr {...others } flag="optimizedRow" />
     );
   }
 }
@@ -113,11 +110,8 @@ class OptimizedCell extends React.Component {
     return true;
   }
   render() {
-    const {
-      value,
-      ...others,
-    } = this.props;
-
+    const { value, ...others } = this.props;
+    console.log(this.props);
     return (
       <td {...others} flag="optimizedCell" />
     );
@@ -145,9 +139,8 @@ class FormDemo extends Component {
       changedRowKey,
       data,
       form,
+      preData,
     } = this.props;
-
-    globalChangedRowKey = changedRowKey;
 
     const columns = [{
       dataIndex: 'busShift',
@@ -422,6 +415,11 @@ class FormDemo extends Component {
             },
           }}
           dataSource={data}
+          onRow={(record, index) => {
+            return {
+              shouldUpdate: preData.length !== 0 && preData[index] !== data[index],
+            };
+          }}
           pagination={false}
         />
       </div>

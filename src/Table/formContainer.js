@@ -14,9 +14,9 @@ const {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    changedRowKey: state.table.changedRowKey,
     data: state.table.data,
     initialValues: state.table.data,
+    preData: state.table.preData,
   };
 };
 
