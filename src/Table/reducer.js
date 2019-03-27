@@ -6,7 +6,7 @@ const {
 } = sync;
 
 const initialState = {
-  data: new Array(20).fill(0).map((row, index) => {
+  data: new Array(200).fill(0).map((row, index) => {
     return {
       key: index,
     };
