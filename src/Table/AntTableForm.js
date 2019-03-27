@@ -89,13 +89,12 @@ const Form1 = Form.create({
  */
 class OptimizedRow extends React.Component {
   shouldComponentUpdate(nextProps) {
-    console.log(nextProps.shouldUpdate)
     return nextProps.shouldUpdate;
   }
 
   render() {
-    console.log(this.props);
     const { shouldUpdate, ...others } = this.props;
+
     return (
       <tr {...others } flag="optimizedRow" />
     );
@@ -111,7 +110,7 @@ class OptimizedCell extends React.Component {
   }
   render() {
     const { value, ...others } = this.props;
-    console.log(this.props);
+
     return (
       <td {...others} flag="optimizedCell" />
     );
@@ -120,6 +119,12 @@ class OptimizedCell extends React.Component {
 
 @hot(module)
 class FormDemo extends Component {
+  constructor(props) {
+    super(props);
+
+    this.preData = [];
+  }
+
   handleChange = (columnKey, rowIndex) => (event) => {
     const {
       onChange,
@@ -134,12 +139,23 @@ class FormDemo extends Component {
     });
   }
 
+  /* Record table data. */
+  componentDidMount() {
+    this.preData = this.props.data;
+  }
+
+  /**
+   * Update preData to newest data once the dom updated.
+   * It wille be shallow compare each row data on table onRow prop. 
+   */
+  componentDidUpdate(prevProps) {
+    this.preData = this.props.data;
+  }
+
   render() {
     const {
-      changedRowKey,
       data,
       form,
-      preData,
     } = this.props;
 
     const columns = [{
@@ -417,7 +433,8 @@ class FormDemo extends Component {
           dataSource={data}
           onRow={(record, index) => {
             return {
-              shouldUpdate: preData.length !== 0 && preData[index] !== data[index],
+              /* Shallow compare each row data to judge whether to rerender the OptimizedRow component. */
+              shouldUpdate: this.preData.length !== 0 && this.preData[index] !== data[index],
             };
           }}
           pagination={false}

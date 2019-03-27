@@ -6,12 +6,11 @@ const {
 } = sync;
 
 const initialState = {
-  data: new Array(200).fill(0).map((row, index) => {
+  data: new Array(20).fill(0).map((row, index) => {
     return {
       key: index,
     };
   }),
-  preData: [],
 };
 
 function changeData(state, action) {
@@ -30,7 +29,6 @@ function changeData(state, action) {
       },
       ...state.slice(rowIndex + 1),
     ],
-    preData: state,
   };
 }
 

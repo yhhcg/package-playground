@@ -1,9 +1,5 @@
 /* eslint-disable require-jsdoc */
 import {connect} from 'react-redux';
-import {
-  change,
-  initialize,
-} from 'redux-form';
 
 import {sync} from './actions';
 import Component from './AntTableForm';
@@ -15,23 +11,13 @@ const {
 const mapStateToProps = (state, ownProps) => {
   return {
     data: state.table.data,
-    initialValues: state.table.data,
-    preData: state.table.preData,
   };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    initial: (payload) => {
-      dispatch(initialize('ReduxFormAnt', { ...payload }));
-    },
     onChange: (payload) => {
-      const {
-        fieldName,
-        value,
-      } = payload;
       dispatch(changeData(payload));
-      // dispatch(change('ReduxFormAnt', fieldName, value));
     },
   };
 };
