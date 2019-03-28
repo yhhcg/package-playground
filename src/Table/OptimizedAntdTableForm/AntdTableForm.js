@@ -40,7 +40,7 @@ const columns = [{
  * Create form and inject form prop to children.
  */
 @hot(module)
-class AntTableForm extends Component {
+class AntdTableForm extends Component {
   static propTypes = {
     children: PropTypes.node,
     form: PropTypes.object,
@@ -79,4 +79,4 @@ export default Form.create({
       ...fields,
     };
   },
-})(AntTableForm);
+})(AntdTableForm);

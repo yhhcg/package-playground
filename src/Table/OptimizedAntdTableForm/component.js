@@ -1,16 +1,16 @@
 /* eslint-disable require-jsdoc */
 import React, {Component} from 'react';
 import {hot} from 'react-hot-loader';
-import AntTableForm from './AntTableForm';
+import AntdTableForm from './AntdTableForm';
 import Table from './Table';
 
 @hot(module)
 class InjectForm extends Component {
   render() {
     return (
-      <AntTableForm {...this.props}>
+      <AntdTableForm {...this.props}>
         <Table />
-      </AntTableForm>
+      </AntdTableForm>
     );
   }
 }
