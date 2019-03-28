@@ -1,10 +1,7 @@
 /* eslint-disable require-jsdoc */
-import React, { Component, PureComponent } from 'react';
-import {
-  array,
-  func,
-} from 'prop-types';
-import { hot } from 'react-hot-loader';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {
   Form,
   Table,
@@ -49,11 +46,16 @@ const columns = [{
  * Create form and inject form prop to children.
  */
 class AntTableForm extends Component {
+  static propTypes = {
+    children: PropTypes.node,
+    form: PropTypes.object,
+  };
+
   render() {
     const {
       children,
       form,
-      ...others,
+      ...others
     } = this.props;
 
     return React.cloneElement(children, {
@@ -88,12 +90,16 @@ const Form1 = Form.create({
  * Optimize row.
  */
 class OptimizedRow extends React.Component {
+  static propTypes = {
+    shouldUpdate: PropTypes.bool,
+  };
+
   shouldComponentUpdate(nextProps) {
     return nextProps.shouldUpdate;
   }
 
   render() {
-    const { shouldUpdate, ...others } = this.props;
+    const {shouldUpdate, ...others} = this.props;
 
     return (
       <tr {...others } flag="optimizedRow" />
@@ -102,6 +108,10 @@ class OptimizedRow extends React.Component {
 }
 
 class OptimizedCell extends React.Component {
+  static propTypes = {
+    value: PropTypes.string,
+  };
+
   shouldComponentUpdate(nextProps) {
     if (nextProps.value === this.props.value) {
       return false;
@@ -109,7 +119,7 @@ class OptimizedCell extends React.Component {
     return true;
   }
   render() {
-    const { value, ...others } = this.props;
+    const {value, ...others} = this.props;
 
     return (
       <td {...others} flag="optimizedCell" />
@@ -119,6 +129,12 @@ class OptimizedCell extends React.Component {
 
 @hot(module)
 class FormDemo extends Component {
+  static propTypes = {
+    data: PropTypes.array,
+    form: PropTypes.object,
+    onChange: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
 
@@ -147,6 +163,7 @@ class FormDemo extends Component {
   /**
    * Update preData to newest data once the dom updated.
    * It wille be shallow compare each row data on table onRow prop. 
+   * @param {Object} prevProps
    */
   componentDidUpdate(prevProps) {
     this.preData = this.props.data;
@@ -427,7 +444,7 @@ class FormDemo extends Component {
           components={{ 
             body: {
               cell: OptimizedCell,
-              row: OptimizedRow
+              row: OptimizedRow,
             },
           }}
           dataSource={data}
