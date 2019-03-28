@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 import React from 'react';
 import {
+  Redirect,
   Route,
   Switch,
 } from 'react-router-dom';
@@ -36,7 +37,7 @@ class Router extends React.Component {
       },
     });
 
-    this.TablePage = lodable({
+    this.OptimizedAntdTableForm = lodable({
       loader: () => {
         injectAsyncReducer( // Aynchronously load reducer
           context.store,
@@ -44,7 +45,12 @@ class Router extends React.Component {
           require('./Table/reducer').default // Reducer function
         );
 
-        return import('./Table/container');
+        return import('./Table/OptimizedAntdTableForm');
+      },
+      loading: () => {
+        return <div>Loading...</div>;
+      },
+    });
       },
       loading: () => {
         return <div>Loading...</div>;
@@ -55,8 +61,8 @@ class Router extends React.Component {
   render() {
     return (
       <Switch>
-        <Route exact path="/" component={this.TablePage} />
-        <Route exact path="/form" component={this.TableFormPage} />
+        <Route exact path="/" render={() => <Redirect to="/optimizedAntdTableForm" />} />
+        <Route exact path="/optimizedAntdTableForm" component={this.OptimizedAntdTableForm} />
       </Switch>
     );
   }
