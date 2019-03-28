@@ -24,7 +24,7 @@ class Table extends Component {
   constructor(props) {
     super(props);
 
-    this.preData = [];
+    this.prevData = [];
   }
 
   handleChange = (columnKey, rowIndex) => (event) => {
@@ -43,16 +43,16 @@ class Table extends Component {
 
   /* Record table data. */
   componentDidMount() {
-    this.preData = this.props.data;
+    this.prevData = this.props.data;
   }
 
   /**
-   * Update preData to newest data once the dom updated.
+   * Update prevData to newest data once the dom updated.
    * It wille be shallow compare each row data on table onRow prop. 
    * @param {Object} prevProps
    */
   componentDidUpdate(prevProps) {
-    this.preData = this.props.data;
+    this.prevData = this.props.data;
   }
 
   render() {
@@ -337,7 +337,7 @@ class Table extends Component {
           onRow={(record, index) => {
             return {
               /* Shallow compare each row data to judge whether to rerender the OptimizedRow component. */
-              shouldUpdate: this.preData.length !== 0 && this.preData[index] !== data[index],
+              shouldUpdate: this.prevData.length !== 0 && this.prevData[index] !== data[index],
             };
           }}
           pagination={false}
