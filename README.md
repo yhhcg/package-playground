@@ -8,7 +8,7 @@ Avoid re-rendering all cell once one of the cells changed.
 
 **OptimizedRow**
 
-```js
+```jsx
   import React from 'react';
 
   class OptimizedRow extends React.Component {
@@ -32,7 +32,7 @@ Avoid re-rendering all cell once one of the cells changed.
 
 **OptimizedCell**
 
-```js
+```jsx
   import React from 'react';
 
   class OptimizedCell extends React.Component {
@@ -59,7 +59,7 @@ Avoid re-rendering all cell once one of the cells changed.
 
 **TableDemo**
 
-```js
+```jsx
   import React from 'react';
   import { Form, Input, Table } from 'antd';
   const {
