@@ -52,7 +52,7 @@ class Router extends React.Component {
       },
     });
 
-    this.AntdTableForm = lodable({
+    this.AntTable = lodable({
       loader: () => {
         injectAsyncReducer( // Aynchronously load reducer
           context.store,
@@ -60,7 +60,7 @@ class Router extends React.Component {
           require('./Table/reducer').default // Reducer function
         );
 
-        return import('./Table/AntdTableForm');
+        return import('./Table/AntTable');
       },
       loading: () => {
         return <div>Loading...</div>;
@@ -73,7 +73,7 @@ class Router extends React.Component {
       <Switch>
         <Route exact path="/" render={() => <Redirect to="/optimizedAntdTableForm" />} />
         <Route exact path="/optimizedAntdTableForm" component={this.OptimizedAntdTableForm} />
-        <Route exact path="/antdTableForm" component={this.AntdTableForm} />
+        <Route exact path="/antTable" component={this.AntTable} />
         <Route exact path="/materialTable" component={this.MaterialTable} />
       </Switch>
     );
