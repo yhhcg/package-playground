@@ -66,6 +66,21 @@ class Router extends React.Component {
         return <div>Loading...</div>;
       },
     });
+
+    this.VirtualizedTable = lodable({
+      loader: () => {
+        injectAsyncReducer( // Aynchronously load reducer
+          context.store,
+          'table', // Reducer name
+          require('./Table/reducer').default // Reducer function
+        );
+
+        return import('./Table/VirtualizedTable');
+      },
+      loading: () => {
+        return <div>Loading...</div>;
+      },
+    });
   }
 
   render() {
@@ -75,6 +90,7 @@ class Router extends React.Component {
         <Route exact path="/optimizedAntdTableForm" component={this.OptimizedAntdTableForm} />
         <Route exact path="/antTable" component={this.AntTable} />
         <Route exact path="/materialTable" component={this.MaterialTable} />
+        <Route exact path="/virtualizedTable" component={this.VirtualizedTable} />
       </Switch>
     );
   }
