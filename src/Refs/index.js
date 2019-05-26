@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Button } from 'antd';
 
 /**
@@ -38,12 +37,12 @@ class Refs extends Component {
         <h1>callback</h1>
         <p>The function receives the React component instance or HTML DOM element as its argument.</p>
         <input ref={(ref) => {
-          console.log('callback and html dom ref');
+          console.log('Callback and html dom ref');
           console.log(ref);
         }} />
         <br />
         <Button ref={(ref) => {
-          console.log('callback and class component ref');
+          console.log('Callback and class component ref');
           console.log(ref);
         }}>button</Button>
       </React.Fragment>
