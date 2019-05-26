@@ -22,6 +22,21 @@ class Router extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.AntTable = lodable({
+      loader: () => {
+        injectAsyncReducer( // Aynchronously load reducer
+          context.store,
+          'table', // Reducer name
+          require('./Table/reducer').default // Reducer function
+        );
+
+        return import('./Table/AntTable');
+      },
+      loading: () => {
+        return <div>Loading...</div>;
+      },
+    });
+
     this.MaterialTable = lodable({
       loader: () => {
         injectAsyncReducer( // Aynchronously load reducer
@@ -46,21 +61,6 @@ class Router extends React.Component {
         );
 
         return import('./Table/OptimizedAntdTableForm');
-      },
-      loading: () => {
-        return <div>Loading...</div>;
-      },
-    });
-
-    this.AntTable = lodable({
-      loader: () => {
-        injectAsyncReducer( // Aynchronously load reducer
-          context.store,
-          'table', // Reducer name
-          require('./Table/reducer').default // Reducer function
-        );
-
-        return import('./Table/AntTable');
       },
       loading: () => {
         return <div>Loading...</div>;
