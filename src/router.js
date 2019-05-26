@@ -67,6 +67,15 @@ class Router extends React.Component {
       },
     });
 
+    this.Refs = lodable({
+      loader: () => {
+        return import('./Refs');
+      },
+      loading: () => {
+        return <div>Loading...</div>;
+      },
+    });
+
     this.VirtualizedTable = lodable({
       loader: () => {
         injectAsyncReducer( // Aynchronously load reducer
@@ -91,6 +100,7 @@ class Router extends React.Component {
         <Route exact path="/antTable" component={this.AntTable} />
         <Route exact path="/materialTable" component={this.MaterialTable} />
         <Route exact path="/virtualizedTable" component={this.VirtualizedTable} />
+        <Route exact path="/refs" component={this.Refs} />
       </Switch>
     );
   }
